@@ -42,20 +42,13 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var viewModel: DashboardViewModel
 
-    private val permissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) {
-        val client = HealthConnectClient.getOrCreate(this)
-        viewModel.checkPermissionsAndLoad(client)
-    }
-
-    // Health Connect permission contract
-    private val healthPermissionLauncher = registerForActivityResult(
-        HealthConnectClient.createRequestPermissionResultContract()
-    ) {
-        val client = HealthConnectClient.getOrCreate(this)
-        viewModel.checkPermissionsAndLoad(client)
-    }
+    #
+private val permissionLauncher = registerForActivityResult(
+    ActivityResultContracts.RequestMultiplePermissions()
+) {
+    val client = HealthConnectClient.getOrCreate(this)
+    viewModel.checkPermissionsAndLoad(client)
+}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,8 +73,8 @@ class MainActivity : ComponentActivity() {
                         state.isLoading -> LoadingScreen()
                         state.healthConnectUnavailable -> UnavailableScreen()
                         state.needsPermission -> PermissionScreen {
-                            healthPermissionLauncher.launch(PERMISSIONS)
-                        }
+    permissionLauncher.launch(PERMISSIONS.map { it }.toTypedArray())
+}
                         else -> DashboardScreen(state)
                     }
                 }
