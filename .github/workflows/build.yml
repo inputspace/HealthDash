@@ -3,6 +3,9 @@ on: [push, workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: HealthDash
     steps:
       - uses: actions/checkout@v4
 
@@ -16,6 +19,7 @@ jobs:
           wget -q https://services.gradle.org/distributions/gradle-8.2-bin.zip
           unzip -q gradle-8.2-bin.zip -d /opt/gradle
           echo "/opt/gradle/gradle-8.2/bin" >> $GITHUB_PATH
+        working-directory: /tmp
 
       - name: Build APK
         run: gradle assembleDebug
@@ -23,4 +27,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: HealthDash-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: HealthDash/app/build/outputs/apk/debug/app-debug.apk
